@@ -6,7 +6,11 @@ games { "gta5", "rdr3" }
 ui_page 'web/build/index.html'
 
 server_script "server/**/*"
-client_script "client/**/*"
+client_scripts {
+  "client/**/*",
+  "cl_events.lua",
+  "cl_selecttool.lua"
+}
 
 files {
   'web/build/index.html',
