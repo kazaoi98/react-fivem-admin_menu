@@ -12,7 +12,7 @@ import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import {itemList} from './Data';
 import {navButtons} from './Data';
-import { getList, filterList } from "./util";
+import { filterList } from "./util";
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import Filter from './Filter';
 import ExpandLess from '@mui/icons-material/ExpandLess';
@@ -21,6 +21,9 @@ import Collapse from '@mui/material/Collapse';
 
 import ExpandContent from './ExpandContent'
 import { fetchNui } from '../utils/fetchNui';
+import { connect } from 'http2';
+import { ListItem } from '@mui/material';
+
 
 
 export var sorted: any;
@@ -57,10 +60,23 @@ export default function ListEntries() {
   const label = { inputProps: { 'aria-label': 'Favourites button' } };
   
   const [checked, setChecked] = useState<any[]>([]);
+
   const [selected, setSelected] = useState<any[]>([]);
+  const [filteredList, setFilteredList] = useState<any[]>([]); 
+  const [filter, setFilter] = useState("all")
 
+  const removeFromFavourites = (value: number) => {
 
-  const handleToggle = (value: number, checkable: boolean, text: string, expandable: boolean ) => () => {
+    const objIndex = itemList.find(((obj: { checkboxId: number; }) => obj.checkboxId === value));
+    if (objIndex != null) {
+      itemList[objIndex.id].favorite = 0;
+    } 
+ 
+  }
+
+  const handleToggle = (value: number, checkable: boolean, text: string, expandable: boolean) => () => {
+    
+
     if (expandable || checkable) {
       const currentIndex = checked.indexOf(value);
       const newChecked = [...checked];
@@ -70,10 +86,13 @@ export default function ListEntries() {
         newChecked.splice(currentIndex, 1);
       }
       setChecked(newChecked);
+      if (checked.includes(value))  removeFromFavourites(value)
+
     } 
   };
 
-  const handleSelect = (value: number, checkable: boolean, text: string, expandable: boolean ) => () => {
+  const handleSelect = (value: number, checkable: boolean, text: string, expandable: boolean) => () => {
+  
     if (expandable || checkable) {
       const currentIndex = selected.indexOf(value);
       const newSelected = [...selected];
@@ -91,56 +110,69 @@ export default function ListEntries() {
     }).catch(e => {
       console.log('callback error', e)
     }) 
+
   };
 
-  const [value] = React.useState(0);
-  const [filteredList, setFilteredList] = useState<any[]>([]);  /* React.useState(null) */
-
-  const handleToggle1 = (e: string) => {
+  const handleFilter = (e: string) => {
     let type = e;
+    setFilter(type)
     type !== "all"
       ?  setFilteredList(filterList(type)) 
-      :  setFilteredList(getList());   
+      :  setFilteredList(sorted);   
   };
 
+  const sortFavourites = () => {
+    sorted = sorted.sort( (a: any, b: any) => {return b.favorite - a.favorite}); //favourites are first
+  };
 
-  var [items] = useState(itemList);
- 
-  useEffect(() => {
-    sorted = [...items].sort(  (a, b) => { 
+  const sortAlphabetically = () => {
+    sorted = [...itemList].sort(  (a, b) => {  //sort elements alphabetically 
       if (a.text.toLowerCase() < b.text.toLowerCase()){
         return -1;
       }
       else return 1;
     }); 
-    
-    sorted = sorted.sort( (a: any, b: any) => {return b.favorite - a.favorite});
-  }, [items]);
+  };
+
+ 
+  useEffect(() => {
+    sortAlphabetically()
+    sortFavourites()
+  }, []);
+
   
   useEffect(() => {
-    
+
     const data = window.localStorage.getItem('checkbox_state');
     if (data !== null && data.length > 2) {
       const parsed = JSON.parse(data)
-      setChecked(parsed);
-      for (let i = 0; i < parsed.length; i++) {
-        //const objIndex = items.findIndex((obj => obj.checkboxId == parsed[i]));
-        const objIndex = items.find((obj => obj.checkboxId === parsed[i]));
+      let table: any[];
+      if (checked.length !== 0) {
+        table = checked
+      } else {
+        setChecked(parsed);
+        table = parsed
+      }
+      for (let i = 0; i < table.length; i++) {
+        const objIndex = sorted.find(((obj: { checkboxId: number; }) => obj.checkboxId === table[i]));
         if (objIndex != null) {
-          items[objIndex.id].favorite = items.length - i
-        }
+
+          itemList[objIndex.id].favorite = itemList.length - i
+        } 
       }; 
-      
+      sortAlphabetically()
+      sortFavourites()
     }
-  }, [items]);
+  }, [checked]);
 
   useEffect(() => {
     window.localStorage.setItem('checkbox_state', JSON.stringify(checked))
+    setFilteredList(sorted);
   }, [checked]);
-
+ 
 
   useEffect(() => {
-    setFilteredList(getList());
+    setFilteredList(sorted);
   }, []);
 
 
@@ -155,65 +187,64 @@ export default function ListEntries() {
 
   return ( 
       <>
-      <Box sx={{ width: '100%' }}>
-        <BottomNavigation
-          showLabels
-          value={value}
-          sx = { { bgcolor: '#37474f' } }
-          onChange={(event, newValue) => {
-            handleToggle1(newValue)
-          }}   
+        <Box sx={{ width: '100%' }}>
+          <BottomNavigation
+            showLabels
+            value={filter}
+            sx = { { bgcolor: '#37474f' } }
+            onChange={(event, newValue) => {
+              handleFilter(newValue)
+            }}   
+          >
+          
+            {navButtons &&
+              navButtons.map( (type, index) => (
+              <BottomNavigationAction  key={index} value={type.value} icon={type.icon} label={type.label}/>
+            ))};
+  
+          </BottomNavigation>
+        </Box>
+        <Divider />
+        <Filter />
+        <ThemeProvider theme={theme}>
+        <Divider/>
+              
+        <List
+            sx={ {width: '100%', maxWidth: 460, bgcolor: '#607d8b', maxHeight: '102ch', overflow: 'auto '} } 
+            component="nav"
+            id = 'list'   
         >
-
-          {navButtons &&
-            navButtons.map( (type, index) => (
-            <BottomNavigationAction  key={index} value={type.value} icon={type.icon} label={type.label}/>
-          ))};
-
-        </BottomNavigation>
-      </Box>
-      <Divider />
-      <Filter />
-      <ThemeProvider theme={theme}>
-      <Divider/>
-      <List
-          sx={ {width: '100%', maxWidth: 460, bgcolor: '#607d8b', maxHeight: '102ch', overflow: 'auto '} } 
-          component="nav"
-          id = 'list'   
-      >
-        {filteredList &&
-          filteredList.map(({ id, text, checkboxId, checkable, expandable }) => (
-            <>
-              <ListItemButton className = 'listElement'   sx = {padding}    key = {id} selected={checkable && selected.includes(id)}  onClick={handleSelect(id, checkable, text, expandable)} >
-              <ListItemIcon>
-                <Checkbox {...label}  icon={<FavoriteBorder />} key ={checkboxId} checkedIcon={<Favorite color='error' />}  onChange={handleToggle(checkboxId, checkable, text, expandable)} checked = {checked.includes(checkboxId)}/>
-              </ListItemIcon>
-                <ListItemText primary={text} className='option' />
-               {expandable && expandFunction(id)}
-              </ListItemButton> 
-              {expandable  &&
-              <Collapse  in={selected.includes(id)} timeout="auto" unmountOnExit>
-              <Box
-                sx={{
-                  '& > :not(style)': { pb: 2, width: '76%' },
-                  bgcolor: '#424242',
-                  maxWidth: '100%',
-                  borderRadius: '6px',
-                  mt: '-2px',
-                  ml: '2px',
-                  mr: '2px'
-                }}
-              >
-                <ExpandContent option = {id} />
-              </Box>   
-              </Collapse>
-              }
-            </>
-          ))}
-      </List>
-      </ThemeProvider>
-
-
+          {filteredList &&
+            filteredList.map(({ id, text, checkboxId, checkable, expandable }) => (
+              <>              
+                <ListItemButton className = 'listElement'   sx = {padding}    key = {id} selected={checkable && selected.includes(id)}  onClick={handleSelect(id, checkable, text, expandable)} >
+                  <ListItemIcon onChange={handleToggle(checkboxId, checkable, text, expandable) }> 
+                    <Checkbox {...label}  icon={<FavoriteBorder />} key ={checkboxId} checkedIcon={<Favorite color='error' />}   checked = {checked.includes(checkboxId)}/>
+                  </ListItemIcon>
+                  <ListItemText primary={text} className='option' />
+                 {expandable && expandFunction(id)}
+                </ListItemButton> 
+                {expandable  &&
+                  <Collapse  in={selected.includes(id)} timeout="auto" unmountOnExit>
+                  <Box
+                    sx={{
+                      '& > :not(style)': { pb: 2, width: '76%' },
+                      bgcolor: '#424242',
+                      maxWidth: '100%',
+                      borderRadius: '6px',
+                      mt: '-2px',
+                      ml: '2px',
+                      mr: '2px'
+                    }}
+                  >
+                    <ExpandContent option = {id} />
+                  </Box>   
+                  </Collapse>
+                }
+              </>
+            ))}
+        </List>
+        </ThemeProvider>
       </>
     
   );

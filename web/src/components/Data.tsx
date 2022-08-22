@@ -44,6 +44,9 @@ export const itemList = [
     { id: 10, text: "Revive in radius",  checkboxId: 110, checkable: false, favorite: 0, category: 'util', expandable: false },
     { id: 11, text: "Invisibility",  checkboxId: 111, checkable: true, favorite: 0, category: 'player', expandable: false },
     { id: 12, text: "Debug mode",  checkboxId: 112, checkable: true, favorite: 0, category: 'player', expandable: false },
+    { id: 13, text: "Spawn menu",  checkboxId: 113, checkable: false, favorite: 0, category: 'util', expandable: true },
+    { id: 14, text: "Unflip vehicle",  checkboxId: 114, checkable: false, favorite: 0, category: 'util', expandable: false },
+    { id: 15, text: "Show player blips",  checkboxId: 115, checkable: true, favorite: 0, category: 'util', expandable: false },
 ];
 
 export const xyzForm = [

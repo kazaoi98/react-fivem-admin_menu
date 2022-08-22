@@ -6,6 +6,7 @@ local function textInfo(entity, type, coords)
     local health = GetEntityHealth(entity)
     
     SetEntityDrawOutlineColor(80, 200, 120, 255)
+    SetEntityDrawOutlineShader(1)
     SetEntityDrawOutline(entity, true)
     if draw ~= entity then
         draw = entity
@@ -86,6 +87,7 @@ end
 
 
 local function SelectTool(value)
+    if not value then SetEntityDrawOutline(draw, false) end
     toggle = value
     while toggle do
 

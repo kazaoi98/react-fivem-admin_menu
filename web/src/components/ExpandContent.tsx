@@ -4,6 +4,7 @@ import AttachContent from './AttachContent'
 import BringContent from './BringContent'
 import DelPropContent from './DelPropContent'
 import BanContent from './BanContent'
+import SpawnMenuContent from './SpawnMenuContent'
 
 interface Itype {
     option: number;
@@ -23,6 +24,8 @@ const ExpandContent = (props: Itype) => {
             return <DelPropContent />;
         case 9:
             return <BringContent />;
+        case 13:
+            return <SpawnMenuContent />;
         default: 
             return null;
     }

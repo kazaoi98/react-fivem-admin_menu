@@ -5,7 +5,7 @@ local CachedPlayers = {}
 RegisterNetEvent('rfam:playerList', function()
 	local src = source
 	--if IsPlayerAceAllowed(src, 'echorp.mod') then
-		TriggerClientEvent('rfam:playerList', source, CachedPlayers)
+		TriggerClientEvent('rfam:playerList', src, CachedPlayers)
 
 	--end	
 end)
@@ -90,6 +90,13 @@ RegisterNetEvent('Fix_vehicle_event', function(data, src)
 	-- logs
 end)
 
+RegisterNetEvent('Unflip_vehicle_event', function(data, src)
+    --if --is admin then
+		TriggerClientEvent('Unflip_vehicle:client', src)
+    --end
+	-- logs
+end)
+
 RegisterNetEvent('God_event', function(data, src)
     --if --is admin then
 		TriggerClientEvent('God:client', src, data)
@@ -138,6 +145,20 @@ RegisterNetEvent('Debug_mode_event', function(data, src)
 	-- logs
 end)
 
+RegisterNetEvent('Noclip_event', function(data, src)
+    --if --is admin then
+		TriggerClientEvent('noclip:client', src, data)
+    --end
+	-- logs
+end)
+
+RegisterNetEvent('Revive_in_radius_event', function(data, src)
+    --if --is admin then
+		TriggerClientEvent('revive_in_radius:client', src)
+    --end
+	-- logs
+end)
+
 
 RegisterNetEvent('toggleSelectTool:server', function(data, src)
     --if --is admin then
@@ -147,9 +168,21 @@ RegisterNetEvent('toggleSelectTool:server', function(data, src)
 end) 
 
 
+RegisterServerEvent('spawnVehicle:server', function(data)
+	local src = source
+	--if admin then end -- check if allowed
+	TriggerClientEvent('spawnVehicle:client', src, data)
+end)
+
 
 RegisterServerEvent('DeleteEntity:server', function(entity)
 	local src = source
 	--if admin then end -- check if allowed
 	TriggerClientEvent('DeleteEnt:client', src, entity)
+end)
+
+RegisterServerEvent('get_into_vehicle:server', function()
+	local src = source
+	--if admin then end -- check if allowed
+	TriggerClientEvent('get_into_vehicle:client', src)
 end)

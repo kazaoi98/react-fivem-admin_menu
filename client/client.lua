@@ -7,14 +7,29 @@ local function SetDisplay(value)
   })
 end
 
+local function SetMinimalise(value)
+  minimise = value
+  SetNuiFocus(value, value)
+  SendNUIMessage({
+    type = "minimise",
+    status = value
+})
+end
+local isMounted = false
 RegisterCommand('admin', function(source)
-  SetDisplay(not display)
+  if not isMounted then 
+   SetDisplay(not display)
+   SetMinimalise(not minimise)
+   isMounted = true
+  else
+  SetMinimalise(not minimise)
+  end
   print('toggle admin menu')
 end, true)
 
 RegisterNUICallback('menu_exit', function(data, cb)
-  SetDisplay(false)
-
+  --SetDisplay(false)
+  SetMinimalise(false)
   cb('exiting from admin menu')
 end)
 
@@ -73,6 +88,17 @@ RegisterNUICallback('toggleSelectTool', function(data, cb)
   TriggerServerEvent('toggleSelectTool:server')
   cb('')
 end)
+
+RegisterNUICallback('spawn_vehicle', function(data, cb)
+  TriggerServerEvent('spawnVehicle:server', data)
+  cb('')
+end)
+
+RegisterNUICallback('get_into_vehicle', function(data, cb)
+  TriggerServerEvent('get_into_vehicle:server')
+  cb('')
+end)
+
 
 RegisterNUICallback('fetch_ui_input', function(data, cb)
   TriggerServerEvent('Trigger-option', data)

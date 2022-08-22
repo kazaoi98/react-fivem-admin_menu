@@ -137,3 +137,62 @@ function tprint (tbl, indent)
 	toprint = toprint .. string.rep(" ", indent-2) .. "}"
 	return toprint
 end
+
+local function getRelativePosition(a, b)
+  if not a or not b then return end
+  return b - a 
+end
+
+local function getRelativeVelocity(ent_a, ent_b)
+  if not ent_a or not ent_b then return end
+  local a = GetEntityVelocity(ent_a)
+   b = GetEntityVelocity(ent_b)
+
+  return b - a
+end
+
+
+
+local function AimAhead()
+  local pid = GetPlayerFromServerId(x)
+  local ped = GetPlayerPed(pid)
+  local a_coords = GetEntityCoords(ped)
+   b_coords = GetEntityCoords(915970)
+  
+  local delta = getRelativePosition(a_coords,b_coords)
+  local vr = getRelativeVelocity(ped, 915970)
+  local muzzleV = 100.0
+
+  local function dot(a, b)
+    local ret = 0
+
+    ret = ret + a * b
+    ret =  ret.x+ret.y+ret.z
+    return ret
+  end
+
+  local a = dot(vr, vr)  - (muzzleV * muzzleV)  
+  local b = 2.0 * dot(vr, delta)
+  local c = dot(delta, delta)
+
+  local desc = b*b - 4.0*a*c
+  return 2.0*c/(math.sqrt(desc) - b);
+
+end
+
+--local function InitAim()
+--  CreateThread(function() 
+--    while true do 
+--      Wait(0)
+--      local deltaTime = AimAhead()
+--      if deltaTime > 0.0 then 
+--        local aimPoint = b_coords + b * deltaTime
+--        DrawMarker(28, aimPoint, vector3(0,0,0), vector3(0,0,0), vector3(0.2,0.2,0.2), vector3(255,0,0), 255, false, false, 2, false, nil, nil, false)
+--      end
+--    end  
+--  end)
+--end
+--InitAim()
+
+
+

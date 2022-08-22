@@ -1,10 +1,10 @@
 //import {itemList} from "./Data";
 import {sorted} from "./ListEntries"
 
-export function getList() {
+/* export function getList() {
     const iList = sorted;
     return iList;
-}
+} */
   
 export function filterList(Type: string) {
   var categ = '';
@@ -29,7 +29,7 @@ export function filterList(Type: string) {
       
   }
   //let filtered = getList().filter(fav => fav.category === Type);
-  var filtered = getList().filter(alter);
+  var filtered = sorted.filter(alter);
   return filtered;
  
 }

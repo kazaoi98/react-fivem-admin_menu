@@ -9,7 +9,9 @@ import Collapse from '@mui/material/Collapse';
 
 const App: React.FC = () => {
 
-  const [display, setDisplay] = useState(false)
+  const [display, setDisplay] = useState(true)
+  const [minimise, setMinimise] = useState(true)
+
 
   window.addEventListener('message', (event) => {
     
@@ -21,27 +23,35 @@ const App: React.FC = () => {
 
   });
 
+  window.addEventListener('message', (event) => {
+    
+    if (event.data.type === 'minimise') {
+      if (event.data.status) {
+        setMinimise(true);
+      } else setMinimise(false);
+    } 
 
+  });
 
   return (
     <>
     
       <div className="nui-wrapper">
         {display &&
-        <>
-        <Collapse in={display } unmountOnExit >
-          <div className = 'wrapper'>
-              <div className='menu'>
-                <Divider />     
-                <ListEntries />
+          <>
+          <Collapse in={ minimise } timeout="auto"/* unmountOnExit */ >
+            <div className = 'wrapper'>
+                <div className='menu'>
+                  <Divider />     
+                  <ListEntries />
+                </div>
+              <div id='vertMenu'>
+                <VertButtons />
               </div>
-            <div id='vertMenu'>
-              <VertButtons />
             </div>
-          </div>
-        </Collapse>
-        </>
-      }
+          </Collapse>
+          </>
+        } 
       </div>
     </>
   );
