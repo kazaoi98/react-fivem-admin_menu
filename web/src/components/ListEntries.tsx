@@ -21,8 +21,7 @@ import Collapse from '@mui/material/Collapse';
 
 import ExpandContent from './ExpandContent'
 import { fetchNui } from '../utils/fetchNui';
-import { connect } from 'http2';
-import { ListItem } from '@mui/material';
+import { ListItem, ListItemSecondaryAction } from '@mui/material';
 
 
 
@@ -185,6 +184,7 @@ export default function ListEntries() {
 
 
 
+
   return ( 
       <>
         <Box sx={{ width: '100%' }}>
@@ -215,34 +215,36 @@ export default function ListEntries() {
             id = 'list'   
         >
           {filteredList &&
-            filteredList.map(({ id, text, checkboxId, checkable, expandable }) => (
-              <>              
-                <ListItemButton className = 'listElement'   sx = {padding}    key = {id} selected={checkable && selected.includes(id)}  onClick={handleSelect(id, checkable, text, expandable)} >
-                  <ListItemIcon onChange={handleToggle(checkboxId, checkable, text, expandable) }> 
-                    <Checkbox {...label}  icon={<FavoriteBorder />} key ={checkboxId} checkedIcon={<Favorite color='error' />}   checked = {checked.includes(checkboxId)}/>
-                  </ListItemIcon>
-                  <ListItemText primary={text} className='option' />
-                 {expandable && expandFunction(id)}
-                </ListItemButton> 
-                {expandable  &&
-                  <Collapse  in={selected.includes(id)} timeout="auto" unmountOnExit>
-                  <Box
-                    sx={{
-                      '& > :not(style)': { pb: 2, width: '76%' },
-                      bgcolor: '#424242',
-                      maxWidth: '100%',
-                      borderRadius: '6px',
-                      mt: '-2px',
-                      ml: '2px',
-                      mr: '2px'
-                    }}
-                  >
-                    <ExpandContent option = {id} />
-                  </Box>   
-                  </Collapse>
-                }
-              </>
-            ))}
+            filteredList.map(({ id, text, checkboxId, checkable, expandable }) => {
+              return (
+                <>         
+                  <ListItemButton className = 'listElement'   sx = {padding}    key = {id} selected={checkable && selected.includes(id)}  onClick={handleSelect(id, checkable, text, expandable)} >
+                    <ListItemIcon onChange={handleToggle(checkboxId, checkable, text, expandable) }> 
+                      <Checkbox {...label}  icon={<FavoriteBorder />} key ={checkboxId} checkedIcon={<Favorite color='error' />}  onClick={(e) => {e.stopPropagation();} } checked = {checked.includes(checkboxId)}/>
+                    </ListItemIcon>
+                    <ListItemText primary={text} className='option' />
+                   {expandable && expandFunction(id)}
+                  </ListItemButton> 
+                  {expandable  &&
+                    <Collapse  in={selected.includes(id)} timeout="auto" unmountOnExit>
+                    <Box
+                      sx={{
+                        '& > :not(style)': { pb: 2, width: '76%' },
+                        bgcolor: '#424242',
+                        maxWidth: '100%',
+                        borderRadius: '6px',
+                        mt: '-2px',
+                        ml: '2px',
+                        mr: '2px'
+                      }}
+                    >
+                      <ExpandContent option = {id} />
+                    </Box>   
+                    </Collapse>
+                  }
+                </>
+              );
+            })}
         </List>
         </ThemeProvider>
       </>
