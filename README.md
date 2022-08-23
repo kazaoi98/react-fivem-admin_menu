@@ -27,7 +27,7 @@ Autorem projektu jest: Łukasz Dytkowski
 
 ### Showcase:
 <div align="center">
-    <img width="150" src="https://media.discordapp.net/attachments/697119664865673280/1011663822626500789/menu-gra.png?width=832&height=468" alt="Fivem-React-Menu showcase" />
-    <img width="150" src="https://media.discordapp.net/attachments/697119664865673280/1011663839613423707/menu-ban.png?width=832&height=468" alt="Fivem-React-Menu showcase" />
+    <img  src="https://media.discordapp.net/attachments/697119664865673280/1011663822626500789/menu-gra.png?width=832&height=468" alt="Fivem-React-Menu showcase" />
+    <img  src="https://media.discordapp.net/attachments/697119664865673280/1011663839613423707/menu-ban.png?width=832&height=468" alt="Fivem-React-Menu showcase" />
 </div>
 
