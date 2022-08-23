@@ -26,7 +26,6 @@ export default function SpawnMenuContent() {
     const [alert, setAlert] = React.useState(false);
     
     useNuiEvent<string>('vehSpawnAlert', (data) => {
-      console.log('tesdt')
       setAlert(true)
     })
     //useNuiEvent('playerList', setAlert)

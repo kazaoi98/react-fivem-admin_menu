@@ -25,8 +25,8 @@ export default function IconButtons() {
         <CloseRoundedIcon sx={{ color: red[500] }}/>
       </IconButton>
 
-      <IconButton aria-label="settings" sx = {{bgcolor: 'DimGray' }}>
-        <SettingsIcon />
+      <IconButton aria-label="settings" sx = {{bgcolor: 'DimGray' }} disabled={true}>
+        <SettingsIcon  />
       </IconButton>
     </Stack>
     

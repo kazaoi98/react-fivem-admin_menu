@@ -7,7 +7,6 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import { fetchNui } from '../utils/fetchNui';
 import Snackbar from '@mui/material/Snackbar';
-
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 
@@ -49,7 +48,6 @@ export default function DelPropContent() {
   };
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    console.log(value)
     fetchNui('DeleteEntity:client', value).then(retData => {
        if (retData) setSuccess(true)
         else setError(true);

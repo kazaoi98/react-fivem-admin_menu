@@ -47,7 +47,7 @@ export default function ListEntries() {
 
    const padding = {
     mb: 0.2,
-     ml: 0.4,
+    ml: 0.4,
     mr: 0.4, 
     borderBottom: 1,
     height: 50,
@@ -59,7 +59,6 @@ export default function ListEntries() {
   const label = { inputProps: { 'aria-label': 'Favourites button' } };
   
   const [checked, setChecked] = useState<any[]>([]); //favourites
-
   const [selected, setSelected] = useState<any[]>([]); //target
   const [filteredList, setFilteredList] = useState<any[]>([]); 
   const [filter, setFilter] = useState("all")
