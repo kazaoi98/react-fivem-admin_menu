@@ -11,11 +11,11 @@ Panel administratora serwera wykonany w React.
 
 ## Opis
 
-Projekt panelu adminstracyjnego (standalone) stworzonego w React do serwerów modyfikacji FiveM .
+Projekt panelu administracyjnego (standalone) stworzonego w React do serwerów modyfikacji FiveM .
 
-Projekt ten stoworzony został w celu nauki React, TypeScript, GitHub, React-Hook-Form, MUI i innych narzędzi. 
+Projekt ten stworzony został w celu nauki React, TypeScript, GitHub, React-Hook-Form, MUI i innych narzędzi. 
 Funkcjonalność opcji Menu napisana w języku LUA w celach integracji z frameworkiem FiveM. 
-Frontend TypeScript (React). Backend - LUA 
+Front-end TypeScript (React). Back-end - LUA 
 
 
 Autorem projektu jest: Łukasz Dytkowski
