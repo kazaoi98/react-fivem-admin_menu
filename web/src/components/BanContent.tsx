@@ -1,4 +1,3 @@
-import React   from 'react'
 import BanButtons from './Ban/BanButtons'
 import Reason from './Ban/Reason'
 import TextFieldComp, { defaultTextFieldValue, FormField, pTarget } from './TextFieldComponent/TextFieldComp';
@@ -26,12 +25,7 @@ export const DefaultValues = {
   useCustomDate: false
 };
 
-//
-
-
-//const onSubmit = (data: FormFields) => console.log(JSON.stringify(data));
-
-const onSubmit: SubmitHandler<FormFields> = (data) => /* alert(JSON.stringify(data)) */ {
+const onSubmit: SubmitHandler<FormFields> = (data) => {
   console.log(data)
   fetchNui('ban_form_data', data).then(retData => {
     console.log(retData)

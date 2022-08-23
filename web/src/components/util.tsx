@@ -19,7 +19,7 @@ export function filterList(Type: string) {
       categ = 'util'
       break;
     default: 
-      console.log("argument doesn't match any case")
+      console.log("error")
   }
 
   var alter = function(element: any) {

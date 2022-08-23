@@ -21,7 +21,7 @@ import Collapse from '@mui/material/Collapse';
 
 import ExpandContent from './ExpandContent'
 import { fetchNui } from '../utils/fetchNui';
-import { ListItem, ListItemSecondaryAction } from '@mui/material';
+
 
 
 
@@ -58,9 +58,9 @@ export default function ListEntries() {
  
   const label = { inputProps: { 'aria-label': 'Favourites button' } };
   
-  const [checked, setChecked] = useState<any[]>([]);
+  const [checked, setChecked] = useState<any[]>([]); //favourites
 
-  const [selected, setSelected] = useState<any[]>([]);
+  const [selected, setSelected] = useState<any[]>([]); //target
   const [filteredList, setFilteredList] = useState<any[]>([]); 
   const [filter, setFilter] = useState("all")
 
@@ -73,10 +73,10 @@ export default function ListEntries() {
  
   }
 
-  const handleToggle = (value: number, checkable: boolean, text: string, expandable: boolean) => () => {
+  const handleToggle = (value: number, checkable: boolean, text: string, contents: boolean) => () => {
     
 
-    if (expandable || checkable) {
+    if (contents || checkable) {
       const currentIndex = checked.indexOf(value);
       const newChecked = [...checked];
       if (currentIndex === -1) {
@@ -90,9 +90,9 @@ export default function ListEntries() {
     } 
   };
 
-  const handleSelect = (value: number, checkable: boolean, text: string, expandable: boolean) => () => {
+  const handleSelect = (value: number, checkable: boolean, text: string, contents: object) => () => {
   
-    if (expandable || checkable) {
+    if (contents || checkable) {
       const currentIndex = selected.indexOf(value);
       const newSelected = [...selected];
       if (currentIndex === -1) {
@@ -101,14 +101,16 @@ export default function ListEntries() {
         newSelected.splice(currentIndex, 1);
       }
       setSelected(newSelected);
-    } 
-    const bool = !selected.includes(value)
-    let data =  { text, bool }
-    fetchNui('fetch_ui_input', data).then(retData => {
-      console.log(retData)
-    }).catch(e => {
-      console.log('callback error', e)
-    }) 
+    } else {
+      const bool = !selected.includes(value)
+      let data =  { text, bool }
+  
+      fetchNui('fetch_ui_input', data).then(retData => {
+        console.log(retData)
+      }).catch(e => {
+        console.log('callback error', e)
+      }) 
+    }
 
   };
 
@@ -182,9 +184,6 @@ export default function ListEntries() {
     return <ExpandMore />
   }}
 
-
-
-
   return ( 
       <>
         <Box sx={{ width: '100%' }}>
@@ -215,31 +214,31 @@ export default function ListEntries() {
             id = 'list'   
         >
           {filteredList &&
-            filteredList.map(({ id, text, checkboxId, checkable, expandable }) => {
+            filteredList.map(({ id, text, checkboxId, checkable, contents }) => {
               return (
                 <>         
-                  <ListItemButton className = 'listElement'   sx = {padding}    key = {id} selected={checkable && selected.includes(id)}  onClick={handleSelect(id, checkable, text, expandable)} >
-                    <ListItemIcon onChange={handleToggle(checkboxId, checkable, text, expandable) }> 
-                      <Checkbox {...label}  icon={<FavoriteBorder />} key ={checkboxId} checkedIcon={<Favorite color='error' />}  onClick={(e) => {e.stopPropagation();} } checked = {checked.includes(checkboxId)}/>
+                  <ListItemButton className = 'listElement'   sx = {padding}    key = {id} selected={checkable && selected.includes(id)}  onClick={handleSelect(id, checkable, text, contents)} >
+                    <ListItemIcon onChange={handleToggle(checkboxId, checkable, text, contents) }> 
+                      <Checkbox {...label}  icon={<FavoriteBorder />} key = {checkboxId} checkedIcon={<Favorite color='error' />}  onClick={(e) => {e.stopPropagation();} } checked = {checked.includes(checkboxId)}/>
                     </ListItemIcon>
-                    <ListItemText primary={text} className='option' />
-                   {expandable && expandFunction(id)}
+                    <ListItemText primary={text} className='option'/>
+                    {contents && expandFunction(id)}
                   </ListItemButton> 
-                  {expandable  &&
+                  {contents &&
                     <Collapse  in={selected.includes(id)} timeout="auto" unmountOnExit>
-                    <Box
-                      sx={{
-                        '& > :not(style)': { pb: 2, width: '76%' },
-                        bgcolor: '#424242',
-                        maxWidth: '100%',
-                        borderRadius: '6px',
-                        mt: '-2px',
-                        ml: '2px',
-                        mr: '2px'
-                      }}
-                    >
-                      <ExpandContent option = {id} />
-                    </Box>   
+                      <Box
+                        sx={{
+                          '& > :not(style)': { pb: 2, width: '76%' },
+                          bgcolor: '#424242',
+                          maxWidth: '100%',
+                          borderRadius: '6px',
+                          mt: '-2px',
+                          ml: '2px',
+                          mr: '2px'
+                        }}
+                      >
+                        <ExpandContent id = {id} />
+                      </Box>   
                     </Collapse>
                   }
                 </>
